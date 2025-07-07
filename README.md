@@ -33,7 +33,7 @@ The EMA-MSE Quantizer integrates Exponential Moving Average (EMA) for dynamic tr
 To further enhance quantization accuracy, QRT-DETR employs a two-stage reconstruction-aware quantization strategy. This method iteratively optimizes weight and activation quantization parameters, minimizing performance degradation even under extreme 4-bit quantization. The process is visualized in the following figure, showcasing the structured pipeline for quantizing RT-DETR.
 
  <div align=center>
-     <img src="https://github.com/user-attachments/assets/cd121d44-ed67-4f21-9155-4b98a21d850c">
+     <img src="https://github.com/user-attachments/assets/7e38c196-2ec7-4883-a7be-1cbc51c10d07">
    </div>
 
 *Figure 3: QRT-DETR quantization process, illustrating the stages of model preprocessing, quantizer integration, and parameter calibration.*
