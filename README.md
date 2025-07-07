@@ -75,7 +75,7 @@ The proposed QRT-DETR framework provides a robust solution for deploying transfo
 - Clone the QRT-DETR repository.
 
 ```bash
-git clone https://github.com/sldey/huo/QRT-DETR.git
+git clone https://github.com/ashleyhuo/QRT-DETR.git
 cd QRT-DETR
 ```
 
