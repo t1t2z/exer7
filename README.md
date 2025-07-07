@@ -1,5 +1,18 @@
 # QRT-DETR: Post-Training Quantization for Real-Time Detection Transformer
 
+## Table of Contents
+  - [Introduction](#introduction)
+    - [EMA-MSE Quantizer](#ema-mse-quantizer)
+    - [Two-Stage Reconstruction-Aware Quantization Strategy](#two-stage-reconstruction-aware-quantization-strategy)
+    - [Performance Validation](#performance-validation)
+  - [Getting Started](#getting-started)
+    - [Install](#install)
+    - [Data Preparation](#data-preparation)
+    - [Run](#run)
+  - [Results on COCO and PASCAL VOC](#results-on-coco-and-pascal-voc)
+  - [Citation](#citation)
+  - [Acknowledgements](#acknowledgements)
+
 ## Introduction
 
 The Real-Time Detection Transformer (RT-DETR) is a state-of-the-art model for real-time object detection, achieving remarkable performance in complex vision tasks. However, its high computational and memory demands pose significant challenges for deployment on resource-constrained edge devices, such as smartphones and electric vehicles. To address these challenges, we propose **QRT-DETR**, a novel post-training quantization (PTQ) framework tailored for RT-DETR, enabling efficient deployment while maintaining high detection accuracy. QRT-DETR introduces the **EMA-MSE Quantizer** and a **two-stage reconstruction-aware quantization strategy**, which collectively mitigate quantization errors and optimize model performance under low-bit settings (e.g., 8-bit and 4-bit).
@@ -54,4 +67,109 @@ The effectiveness of QRT-DETR is demonstrated through extensive experiments on t
 
 *Figure 4: Grad-CAM Visualization comparing (a) results of uniform quantization and (b) results of QRT-DETR quantization.*
 
-The proposed QRT-DETR framework provides a robust solution for deploying transformer-based real-time object detectors on resource-constrained devices, offering both theoretical insights and practical guidelines for efficient model optimization. The code is available at [https://github.com/sldey/huo/QRT-DETR](https://github.com/sldey/huo/QRT-DETR).
+The proposed QRT-DETR framework provides a robust solution for deploying transformer-based real-time object detectors on resource-constrained devices, offering both theoretical insights and practical guidelines for efficient model optimization. 
+## Getting Started
+
+### Install
+
+- Clone the QRT-DETR repository.
+
+```bash
+git clone https://github.com/sldey/huo/QRT-DETR.git
+cd QRT-DETR
+```
+
+- Create a conda virtual environment and activate it.
+
+```bash
+conda create -n qrt-detr python=3.8 -y
+conda activate qrt-detr
+```
+
+- Install PyTorch and dependencies. For example:
+
+```bash
+conda install pytorch=1.12.1 torchvision cudatoolkit=11.3 -c pytorch
+```
+
+- Install additional dependencies required for QRT-DETR.
+
+```bash
+pip install -r requirements.txt
+```
+
+### Data Preparation
+
+Download and prepare the COCO 2017 dataset for evaluation. The dataset should be structured as follows:
+
+```
+├── coco
+│   ├── train2017
+│   ├── val2017
+│   ├── annotations
+```
+
+For calibration, randomly select 32 images from the `train2017` set as specified in the paper.
+
+Optionally, prepare the PASCAL VOC 2012 dataset for additional evaluation:
+
+```
+├── voc
+│   ├── VOC2012
+│   ├── train
+│   ├── val
+```
+
+### Run
+
+Example: Evaluate the quantized RT-DETR model with the EMA-MSE Quantizer and two-stage reconstruction strategy.
+
+```bash
+python test_quant.py rt_detr_r18 <YOUR_COCO_DATA_DIR> --quant --ema-mse --two-stage
+```
+
+- `rt_detr_r18`: Model architecture, which can be replaced with other RT-DETR variants (e.g., `rt_detr_r50`).
+- `--quant`: Enable quantization.
+- `--ema-mse`: Use the EMA-MSE Quantizer.
+- `--two-stage`: Apply the two-stage reconstruction-aware quantization strategy.
+- `<YOUR_COCO_DATA_DIR>`: Path to the COCO dataset directory.
+
+To evaluate on PASCAL VOC 2012, specify the dataset path:
+
+```bash
+python test_quant.py rt_detr_r18 <YOUR_VOC_DATA_DIR> --quant --ema-mse --two-stage --dataset voc
+```
+
+## Results on COCO and PASCAL VOC
+
+The following table summarizes the performance of QRT-DETR compared to other quantized object detection models on the COCO 2017 dataset. Results demonstrate that QRT-DETR maintains high detection accuracy under low-bit quantization settings.
+
+| Models       | Quantization Method | Bits (W/A) | AP   | AP₅₀ | AP₇₅ |
+|--------------|---------------------|------------|------|------|------|
+| YOLOv5s      | MinMax [32]         | 8/8        | 38.9 | 56.5 | 41.2 |
+| YOLOv5s      | Percentile [32]     | 8/8        | 39.0 | 56.4 | 41.3 |
+| DETR-R50     | VT-PTQ              | 8/8        | -    | -    | -    |
+| RT-DETR (FP) | None                | 32/32      | 46.4 | 63.7 | 50.3 |
+| QRT-DETR     | EMA-MSE + Two-Stage | 8/8        | 46.3 | -    | -    |
+| QRT-DETR     | EMA-MSE + Two-Stage | 6/6        | 44.0 | -    | -    |
+| QRT-DETR     | EMA-MSE + Two-Stage | 4/4        | 22.6 | -    | -    |
+
+QRT-DETR achieves a 3.3% AP improvement under 8-bit quantization and a 3.9% AP improvement under 4-bit quantization compared to baseline methods, significantly outperforming other approaches like Q-YOLO (14.0 AP at 4-bit). On PASCAL VOC 2012, similar trends are observed, though detailed metrics are available in the paper.
+
+## Citation
+
+If you find this work useful in your research, please consider citing our paper:
+
+```BibTeX
+@article{huo2025qrtdetr,
+  title={QRT-DETR: Post-Training Quantization for Real-Time Detection Transformer},
+  author={Huo, Ying and Wu, Tianle and Shen, Yuxuan and Li, Xiaomeng and Tao, Zhao and Yang, Dawei},
+  journal={TBD},
+  year={2025},
+  url={https://github.com/sldey/huo/QRT-DETR}
+}
+```
+
+## Acknowledgements
+
+This work is supported by the National Natural Science Foundation of China under Grant No. 61902176, the Natural Science Foundation for Youth of Jiangsu Province under Grant No. BK2018106, the Natural Science Foundation of the Jiangsu Higher Education Institution of China under Grant No. 18KJB520019, and the Funding project of "Qing Lan Project" in Jiangsu Province (2023).
