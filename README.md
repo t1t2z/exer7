@@ -146,8 +146,6 @@ The following table summarizes the performance of QRT-DETR compared to other qua
 
 | Models       | Quantization Method | Bits (W/A) | AP   | AP₅₀ | AP₇₅ |
 |--------------|---------------------|------------|------|------|------|
-| YOLOv5s      | MinMax [32]         | 8/8        | 38.9 | 56.5 | 41.2 |
-| YOLOv5s      | Percentile [32]     | 8/8        | 39.0 | 56.4 | 41.3 |
 | DETR-R50     | VT-PTQ              | 8/8        | -    | -    | -    |
 | RT-DETR (FP) | None                | 32/32      | 46.4 | 63.7 | 50.3 |
 | QRT-DETR     | EMA-MSE + Two-Stage | 8/8        | 46.3 | -    | -    |
